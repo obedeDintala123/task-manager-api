@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "Task" ALTER COLUMN "description" DROP NOT NULL,
+ALTER COLUMN "completed" SET DEFAULT false,
+ALTER COLUMN "dueDate" DROP NOT NULL;
