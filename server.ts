@@ -12,7 +12,7 @@ import { swaggerUi, specs } from "./swagger.js";
 dotenv.config();
 
 const server = express();
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 3001;
 
 server.use(express.json());
 server.use(cookieParser());
