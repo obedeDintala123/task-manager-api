@@ -27,17 +27,11 @@ export async function login(req: Request, res: Response) {
       process.env.SECRET!
     );
 
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "none",
-      path: "/",
-      maxAge: 1000 * 60 * 60 * 24 * 7, 
-    });
-
     return res.status(200).json({
       message: "Login successful",
+      token,
     });
+    
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });
