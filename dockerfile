@@ -5,7 +5,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 
-# Gera cliente do Prisma dentro do container
+COPY prisma ./prisma
 RUN npx prisma generate
 
 COPY . .
