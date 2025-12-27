@@ -23,6 +23,9 @@ server.use(
   })
 );
 
+server.get("/", (req, res) => {
+  res.send("API is running");
+});
 server.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 server.use("/api/v1", userRouter);
 server.use("/api/v1/auth", authRouter);
