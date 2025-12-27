@@ -27,7 +27,13 @@ export async function login(req: Request, res: Response) {
       process.env.SECRET!
     );
 
-    res.cookie("token", token, { httpOnly: true, secure: false });
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      path: "/",
+      maxAge: 60 * 60 * 24 * 7,
+    });
 
     return res.status(200).json({
       message: "Login successful",

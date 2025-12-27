@@ -9,16 +9,16 @@ import { analysisRouter } from "./routes/route.analysis.js";
 import { taskRouter } from "./routes/route.task.js";
 import { swaggerUi, specs } from "./swagger.js";
 
-dotenv.config(); 
+dotenv.config();
 
 const server = express();
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 8080;
 
 server.use(express.json());
 server.use(cookieParser());
 server.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: ["https://tasking-front.vercel.app", "http://localhost:3000"],
     credentials: true,
   })
 );
