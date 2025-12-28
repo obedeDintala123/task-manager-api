@@ -3,11 +3,12 @@ import { prisma } from "../lib/prisma.js";
 
 export async function getUser(req: Request, res: Response) {
   try {
-
     const id = req.userId;
 
+    if (!id) return res.status(401).json({ mensage: "Unauthorized" });
+
     const user = await prisma.user.findUnique({
-      where: { id: id! },
+      where: { id },
       include: {
         team: true,
         tasks: {

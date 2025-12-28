@@ -4,15 +4,9 @@ import { prisma } from "../lib/prisma.js";
 
 export async function getTasks(req: Request, res: Response) {
   try {
-    const token = req.cookies.token;
+    const id = req.userId;
 
-    if (!token) return res.status(401).json({ mensage: "Unauthorized" });
-
-    const decoded = jwt.verify(token, process.env.SECRET!) as {
-      userId: string;
-    };
-
-    const id = decoded.userId;
+    if (!id) return res.status(401).json({ mensage: "Unauthorized" });
 
     const tasks = await prisma.task.findMany({
       where: {
@@ -30,20 +24,12 @@ export async function getTasks(req: Request, res: Response) {
 export async function getTaskById(req: Request, res: Response) {
   const { id } = req.params;
   try {
-    const token = req.cookies.token;
-
-    if (!token) return res.status(401).json({ mensage: "Unauthorized" });
-
-    const decoded = jwt.verify(token, process.env.SECRET!) as {
-      userId: string;
-    };
-
-    const userId = decoded.userId;
+    const userId = req.userId;
 
     const task = await prisma.task.findFirst({
       where: {
         id: id!,
-        userId,
+        userId: userId!,
       },
     });
 
@@ -60,10 +46,6 @@ export async function getTaskByStatus(req: Request, res: Response) {
   const { status } = req.params;
 
   try {
-    const token = req.cookies.token;
-
-    if (!token) return res.status(401).json({ mensage: "Unauthorized" });
-
     const task = await prisma.task.findMany({
       where: {
         status: status!,
@@ -79,15 +61,9 @@ export async function getTaskByStatus(req: Request, res: Response) {
 
 export async function createTask(req: Request, res: Response) {
   try {
-    const token = req.cookies.token;
+    const id = req.userId;
 
-    if (!token) return res.status(401).json({ mensage: "Unauthorized" });
-
-    const decoded = jwt.verify(token, process.env.SECRET!) as {
-      userId: string;
-    };
-
-    const id = decoded.userId;
+    if (!id) return res.status(401).json({ mensage: "Unauthorized" });
 
     const {
       title,
@@ -149,15 +125,9 @@ export async function updateTask(req: Request, res: Response) {
   } = req.body as any;
 
   try {
-    const token = req.cookies.token;
+    const userId = req.userId;
 
-    if (!token) return res.status(401).json({ mensage: "Unauthorized" });
-
-    const decoded = jwt.verify(token, process.env.SECRET!) as {
-      userId: string;
-    };
-
-    const userId = decoded.userId;
+    if (!userId) return res.status(401).json({ mensage: "Unauthorized" });
 
     const task = await prisma.task.update({
       where: { id: id!, userId },
@@ -169,7 +139,7 @@ export async function updateTask(req: Request, res: Response) {
         startDate,
         endDate,
         startHour,
-        endHour
+        endHour,
       },
     });
 
@@ -187,10 +157,6 @@ export async function updateStatusTask(req: Request, res: Response) {
   const { status } = req.body;
 
   try {
-    const token = req.cookies.token;
-
-    if (!token) return res.status(401).json({ mensage: "Unauthorized" });
-
     const task = await prisma.task.update({
       where: { id: id! },
       data: {
@@ -211,10 +177,6 @@ export async function deleteTask(req: Request, res: Response) {
   const { id } = req.params;
 
   try {
-    const token = req.cookies.token;
-
-    if (!token) return res.status(401).json({ mensage: "Unauthorized" });
-
     const task = await prisma.task.delete({
       where: { id: id! },
     });
