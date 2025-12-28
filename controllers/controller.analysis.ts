@@ -4,24 +4,16 @@ import { prisma } from "../lib/prisma.js";
 
 export async function getDashboardMetrics(req: Request, res: Response) {
   try {
-    const token = req.cookies.token;
-
-    if (!token) {
-      return res.status(401).json({ mensage: "Unauthorized" });
-    }
-
-    const decoded = jwt.decode(token) as { userId: string };
-
-    const id = decoded.userId;
+    const id = req.userId;
 
     const taskCount = await prisma.task.count({
       where: {
-        userId: id,
+        userId: id!,
       },
     });
 
     const user = await prisma.user.findUnique({
-      where: { id },
+      where: { id: id! },
       select: { teamId: true },
     });
 
