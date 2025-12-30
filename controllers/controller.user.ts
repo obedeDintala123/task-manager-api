@@ -25,7 +25,27 @@ export async function getUser(req: Request, res: Response) {
       return res.status(404).json({ mensage: "User not found" });
     }
 
-    return res.status(200).json(user);
+    const teamMembers = await prisma.team.findUnique({
+      where: { id: user.team?.id! },
+      select: {
+        id: true,
+        name: true,
+        users: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+          },
+        },
+      },
+    });
+
+    if (!user.team) return res.status(200).json(user);
+
+    return res
+      .status(200)
+      .json({ ...user, team: { ...user.team, users: teamMembers?.users } });
   } catch (error) {
     console.error("Error fetching user:", error);
     return res.status(500).json({ message: "Internal server error" });

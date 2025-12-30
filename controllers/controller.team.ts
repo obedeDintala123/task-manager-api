@@ -16,7 +16,20 @@ export async function createTeam(req: Request, res: Response) {
       return res.status(400).json({ message: "Team already exists" });
 
     // Cria o time
-    const team = await prisma.team.create({ data: { name } });
+    const team = await prisma.team.create({
+      data: {
+        name,
+        users: {
+          connect: memberEmails
+            ? memberEmails.map((email: string) => ({ email }))
+            : [
+                {
+                  id: req.userId,
+                },
+              ],
+        },
+      },
+    });
 
     // Associa apenas o criador ao time (usuário existente)
     if (req.userId) {
@@ -50,7 +63,7 @@ export async function createTeam(req: Request, res: Response) {
               <p>You have been added to the team "<strong>${name}</strong>". Please log in to your account to view the team and start collaborating!</p>
               <a href="${process.env.FRONTEND_URL}"
                  style="
-                 width: 100%;
+                 width: 90%;
                    display: inline-block;
                    padding: 10px 20px;
                    margin-top: 20px;
@@ -59,6 +72,7 @@ export async function createTeam(req: Request, res: Response) {
                    text-decoration: none;
                    border-radius: 5px;
                    font-weight: bold;
+                    text-align: center;
                  ">
                  Login
               </a>
