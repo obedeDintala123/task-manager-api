@@ -12,7 +12,7 @@ model Team {
   name      String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  users     User[]   @relation("TeamMembers")
+  users     User[]   
 }
 
 model User {
@@ -23,7 +23,7 @@ model User {
   lastName  String  @default("")
   phone     String
   teamId    String? @db.Uuid
-  team      Team?   @relation("TeamMembers", fields: [teamId], references: [id])
+  team      Team?   @relation( fields: [teamId], references: [id])
 
   tasks     Task[]
   createdAt DateTime @default(now())
