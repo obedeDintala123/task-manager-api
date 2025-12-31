@@ -13,7 +13,7 @@ const options = {
 
     servers: [
       {
-        url: "http://localhost:5106/api/v1",
+        url: process.env.BACK_URL,
       },
     ],
 
