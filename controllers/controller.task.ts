@@ -46,19 +46,21 @@ export async function getTaskById(req: Request, res: Response) {
 }
 
 export async function getTaskByStatus(req: Request, res: Response) {
-  const { status } = req.params;
+  const status = req.query.status as string | undefined;
 
   try {
-    const task = await prisma.task.findMany({
-      where: {
-        status: status!,
-      },
+    const tasks = await prisma.task.findMany({
+      where: status ? { status } : {}, 
     });
 
-    return res.status(200).json(task);
+    if (!tasks || tasks.length === 0) {
+      return res.status(404).json({ message: "Tasks not found" });
+    }
+
+    return res.status(200).json(tasks);
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ mensage: "Internal server error" });
+    return res.status(500).json({ message: "Internal server error" });
   }
 }
 
